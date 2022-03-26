@@ -11,7 +11,7 @@ import ice.easy.xposed.base.AppRegister
 
 abstract class EasyXposedInit: IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackageResources {
 
-    private var packageParam: XC_LoadPackage.LoadPackageParam? = null
+    private lateinit var packageParam: XC_LoadPackage.LoadPackageParam
     abstract val registeredApp: List<AppRegister>
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam?) {
@@ -29,7 +29,7 @@ abstract class EasyXposedInit: IXposedHookLoadPackage, IXposedHookZygoteInit, IX
 
     override fun handleInitPackageResources(resparam: XC_InitPackageResources.InitPackageResourcesParam?) {
         XposedBridge.log("XposedInit.handleInitPackageResources called")
-        if (packageParam != null) {
+        if (this::packageParam.isInitialized) {
             registeredApp.forEach { app ->
                 if (app.packageName == packageParam!!.packageName && (packageParam!!.processName in app.processName || app.processName.isEmpty())) {
                     app.handleInitPackageResources(resparam!!)
