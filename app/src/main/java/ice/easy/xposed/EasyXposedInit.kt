@@ -31,7 +31,7 @@ abstract class EasyXposedInit: IXposedHookLoadPackage, IXposedHookZygoteInit, IX
         XposedBridge.log("XposedInit.handleInitPackageResources called")
         if (this::packageParam.isInitialized) {
             registeredApp.forEach { app ->
-                if (app.packageName == packageParam!!.packageName && (packageParam!!.processName in app.processName || app.processName.isEmpty())) {
+                if (app.packageName == packageParam.packageName && (packageParam.processName in app.processName || app.processName.isEmpty())) {
                     app.handleInitPackageResources(resparam!!)
                 }
             }
