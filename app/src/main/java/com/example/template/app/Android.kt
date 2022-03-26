@@ -13,9 +13,9 @@ class Android: AppRegister() {
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         super.handleLoadPackage(lpparam)
         autoInitHooks(
+            lpparam,
             ExampleHook
         )
     }
-
 
 }

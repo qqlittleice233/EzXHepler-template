@@ -16,10 +16,11 @@ abstract class AppRegister: IXposedHookLoadPackage, IXposedHookInitPackageResour
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {}
     override fun handleInitPackageResources(resparam: XC_InitPackageResources.InitPackageResourcesParam) {}
 
-    protected fun autoInitHooks(vararg hook: HookRegister) {
+    protected fun autoInitHooks(lpparam: XC_LoadPackage.LoadPackageParam, vararg hook: HookRegister) {
         hook.forEach {
             runCatching {
                 if (it.isInit) return@forEach
+                it.lpparam = lpparam
                 it.init()
                 it.isInit = true
                 Log.i("Inited hook: ${it.javaClass.simpleName}")
