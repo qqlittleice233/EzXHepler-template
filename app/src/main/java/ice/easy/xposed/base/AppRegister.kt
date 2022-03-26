@@ -20,7 +20,7 @@ abstract class AppRegister: IXposedHookLoadPackage, IXposedHookInitPackageResour
         hook.forEach {
             runCatching {
                 if (it.isInit) return@forEach
-                it.lpparam = lpparam
+                it.setLoadPackageParam(lpparam)
                 it.init()
                 it.isInit = true
                 Log.i("Inited hook: ${it.javaClass.simpleName}")

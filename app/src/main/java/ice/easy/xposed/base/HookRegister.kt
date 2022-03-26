@@ -3,7 +3,18 @@ package ice.easy.xposed.base
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 abstract class HookRegister {
-    lateinit var lpparam: XC_LoadPackage.LoadPackageParam
+    private lateinit var lpparam: XC_LoadPackage.LoadPackageParam
     var isInit: Boolean = false
     abstract fun init()
+
+    fun setLoadPackageParam(loadPackageParam: XC_LoadPackage.LoadPackageParam) {
+        lpparam = loadPackageParam
+    }
+
+    protected fun getLoadPackageParam(): XC_LoadPackage.LoadPackageParam? {
+        if (this::lpparam.isInitialized) {
+            return lpparam
+        }
+        return null
+    }
 }
