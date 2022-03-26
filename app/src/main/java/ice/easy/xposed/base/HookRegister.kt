@@ -1,5 +1,6 @@
 package ice.easy.xposed.base
 
+import com.github.kyuubiran.ezxhelper.init.InitFields
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 abstract class HookRegister {
@@ -17,4 +18,15 @@ abstract class HookRegister {
         }
         return null
     }
+
+    protected fun getDefaultClassLoader(): ClassLoader? {
+        if (this::lpparam.isInitialized) {
+            return lpparam.classLoader
+        }
+        if (InitFields.isEzXClassLoaderInited) {
+            return InitFields.ezXClassLoader
+        }
+        return null
+    }
+
 }
