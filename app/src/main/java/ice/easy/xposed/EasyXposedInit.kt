@@ -1,6 +1,7 @@
 package ice.easy.xposed
 
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
+import com.github.kyuubiran.ezxhelper.utils.Log.logexIfThrow
 import de.robv.android.xposed.IXposedHookInitPackageResources
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.IXposedHookZygoteInit
@@ -21,7 +22,7 @@ abstract class EasyXposedInit: IXposedHookLoadPackage, IXposedHookZygoteInit, IX
                 EzXHelperInit.initHandleLoadPackage(lpparam)
                 EzXHelperInit.setLogTag(app.logTag)
                 EzXHelperInit.setToastTag(app.logTag)
-                app.handleLoadPackage(lpparam)
+                runCatching { app.handleLoadPackage(lpparam) }.logexIfThrow("Failed call handleLoadPackage, package: ${app.packageName}")
             }
         }
     }
@@ -30,7 +31,7 @@ abstract class EasyXposedInit: IXposedHookLoadPackage, IXposedHookZygoteInit, IX
         if (this::packageParam.isInitialized) {
             registeredApp.forEach { app ->
                 if (app.packageName == packageParam.packageName && (packageParam.processName in app.processName || app.processName.isEmpty())) {
-                    app.handleInitPackageResources(resparam!!)
+                    runCatching { app.handleInitPackageResources(resparam!!) }.logexIfThrow("Failed call handleInitPackageResources, package: ${app.packageName}")
                 }
             }
         }
