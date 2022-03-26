@@ -5,7 +5,6 @@ import com.github.kyuubiran.ezxhelper.utils.Log.logexIfThrow
 import de.robv.android.xposed.IXposedHookInitPackageResources
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.IXposedHookZygoteInit
-import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_InitPackageResources
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import ice.easy.xposed.base.AppRegister
