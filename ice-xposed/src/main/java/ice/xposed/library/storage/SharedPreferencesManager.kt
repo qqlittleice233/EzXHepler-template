@@ -1,24 +1,40 @@
 package ice.xposed.library.storage
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import ice.xposed.library.util.Warning
 import org.json.JSONObject
 
 object SharedPreferencesManager {
 
     private val sharedPreferenceProxyMap = mutableMapOf<String, SharedPreferenceProxy>()
 
+    const val PRIVATE = Context.MODE_PRIVATE
+    @SuppressLint("WorldReadableFiles")
+    @Warning("LSPosed will hook it, so no exception will be thrown")
+    const val WORLD_READABLE = Context.MODE_WORLD_READABLE
+
     @JvmStatic
     @Synchronized
-    fun getSharedPreferenceProxy(context: Context, spName: String): SharedPreferenceProxy {
-        return sharedPreferenceProxyMap.getOrPut(spName) { SharedPreferenceProxy(context, spName) }
+    fun getSharedPreferenceProxy(context: Context, spName: String, mode: Int = PRIVATE): SharedPreferenceProxy {
+        return sharedPreferenceProxyMap.getOrPut(spName) {
+            val pref = try {
+                context.getSharedPreferences(spName, mode)
+            } catch (e: Exception) {
+                if (mode == WORLD_READABLE) {
+                    context.getSharedPreferences(spName, PRIVATE)
+                } else {
+                    throw e
+                }
+            }
+            SharedPreferenceProxy(pref)
+        }
     }
 
-    class SharedPreferenceProxy(context: Context, spName: String) {
+    class SharedPreferenceProxy(val sharedPreference: SharedPreferences) {
 
-        val sharedPreference: SharedPreferences = context.getSharedPreferences(spName, Context.MODE_PRIVATE)
         private val mEditor by lazy { sharedPreference.edit() }
-
         val sharedPreferenceBackup by lazy { SharedPreferenceBackup() }
 
         fun put(key: String, value: Any) {
