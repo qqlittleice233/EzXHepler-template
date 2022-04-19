@@ -19,15 +19,7 @@ object SharedPreferencesManager {
     @Synchronized
     fun getSharedPreferenceProxy(context: Context, spName: String, mode: Int = PRIVATE): SharedPreferenceProxy {
         return sharedPreferenceProxyMap.getOrPut(spName) {
-            val pref = try {
-                context.getSharedPreferences(spName, mode)
-            } catch (e: Exception) {
-                if (mode == WORLD_READABLE) {
-                    context.getSharedPreferences(spName, PRIVATE)
-                } else {
-                    throw e
-                }
-            }
+            val pref = context.getSharedPreferences(spName, mode)
             SharedPreferenceProxy(pref)
         }
     }
